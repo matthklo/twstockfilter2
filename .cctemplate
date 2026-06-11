@@ -1,13 +1,13 @@
 {
-  "name": "cloud-run-microservice-template-nodejs",
+  "name": "twstockfilter2-cloud-run-nodejs",
   "metadata": {
     "version": "0.1.0"
   },
   "templates": [
     {
       "path": "./",
-      "name": "Cloud Run Microservice Template - Node.js",
-      "description": "Basic microservice template for Cloud Run",
+      "name": "twstockfilter2 Microservices - Node.js",
+      "description": "The web backend of twstockfilter2, powered by Google Cloud Run",
       "languages": [
         "Node.js"
       ]

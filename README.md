@@ -1,8 +1,8 @@
-# Cloud Run Template Microservice
+# twstockfilter2 Microservice
 
-A template repository for a Cloud Run microservice, written in Node.js. 
+A repository for twstockfilter2 microservice, written in TypeScript+Node.js. 
 
-[![Run on Google Cloud](https://deploy.cloud.run/button.svg)](https://deploy.cloud.run)
+Powered by Google Cloud Run.
 
 ## Prerequisite
 
