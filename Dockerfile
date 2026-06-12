@@ -25,7 +25,7 @@ RUN npm ci
 COPY . ./
 
 # Build the TypeScript project
-RUN npm run build
+RUN npm run build-prod
 
 # Stage 2: Create the production image
 FROM node:24-slim
@@ -38,7 +38,7 @@ COPY package*.json Procfile ./
 RUN npm ci --only=production
 
 # Copy the compiled transpiled output (except tests) from the builder stage
-COPY --from=builder --exclude=test/* /usr/src/app/dist ./
+COPY --from=builder /usr/src/app/dist ./
 
 # Run the web service on container startup.
 ENTRYPOINT [ "node", "index.js" ]
