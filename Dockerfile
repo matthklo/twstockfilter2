@@ -9,23 +9,33 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Use the official lightweight Node.js image.
-# https://hub.docker.com/_/node
-FROM node:24-slim
+# Stage 1: Build the TypeScript application
+FROM node:24-slim AS builder
 
-# Create and change to the app directory.
 WORKDIR /usr/src/app
 
-# Copy application dependency manifests to the container image.
-# A wildcard is used to ensure both package.json AND package-lock.json are copied.
-# Copying this separately prevents re-running npm install on every code change.
 COPY package*.json ./
 
-# Install dependencies.
+# Install all dependencies (including devDependencies) to build the app
+RUN npm ci
+
+COPY . ./
+
+# Build the TypeScript project
+RUN npm run build
+
+# Stage 2: Create the production image
+FROM node:24-slim
+
+WORKDIR /usr/src/app
+
+COPY package*.json Procfile ./
+
+# Install only production dependencies
 RUN npm ci --only=production
 
-# Copy local code to the container image.
-COPY . ./
+# Copy the compiled transpiled output (except tests) from the builder stage
+COPY --from=builder --exclude=test/* /usr/src/app/dist ./
 
 # Run the web service on container startup.
 ENTRYPOINT [ "node", "index.js" ]

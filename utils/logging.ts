@@ -12,15 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import Pino from 'pino';
-import PinoHttp from 'pino-http';
+import pino from 'pino';
+import { pinoHttp as pinoHttpMiddleware } from 'pino-http';
+import { IncomingMessage } from 'http';
 
 /**
  * Set project Id for log correlation in request-based logger
  * @param {string} projectId - Google Cloud Platform Project Id
  */
-let project;
-export const initLogCorrelation = (projectId) => {
+let project: string | undefined;
+export const initLogCorrelation = (projectId: string | undefined): void => {
   project = projectId;
 };
 
@@ -32,7 +33,7 @@ export const initLogCorrelation = (projectId) => {
  * https://getpino.io/#/docs/api?id=formatters-object
  */
 const formatters = {
-  level(label) {
+  level(label: string) {
     return { severity: label };
   },
 };
@@ -40,7 +41,7 @@ const formatters = {
 /**
  * Initialize pino logger
  */
-export const logger = Pino({
+export const logger = pino({
   formatters,
   // Set log message property name to "message" for automatic parsing
   messageKey: 'message',
@@ -50,12 +51,14 @@ export const logger = Pino({
  * Create request-based logger with trace ID field for logging correlation
  * For more info, see https://cloud.google.com/run/docs/logging#correlate-logs
  */
-export const pinoHttp = PinoHttp({
+export const pinoHttp = pinoHttpMiddleware({
   logger,
-  reqCustomProps: function (req) {
-    const traceHeader = req.header('X-Cloud-Trace-Context');
-    let trace;
-    if (traceHeader) {
+  customProps: function (req: IncomingMessage) {
+    const traceHeader = (req as any).header
+      ? (req as any).header('X-Cloud-Trace-Context')
+      : req.headers['x-cloud-trace-context'];
+    let trace: string | undefined;
+    if (traceHeader && typeof traceHeader === 'string') {
       const [traceId] = traceHeader.split('/');
       trace = `projects/${project}/traces/${traceId}`;
     }

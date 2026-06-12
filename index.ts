@@ -13,13 +13,13 @@
 // limitations under the License.
 
 import app from './app.js';
-import {logger, initLogCorrelation} from './utils/logging.js';
-import {fetchProjectId} from './utils/metadata.js';
+import { logger, initLogCorrelation } from './utils/logging.js';
+import { fetchProjectId } from './utils/metadata.js';
 
 /**
  * Initialize app and start Express server
  */
-const main = async () => {
+const main = async (): Promise<void> => {
   let project = process.env.GOOGLE_CLOUD_PROJECT;
   if (!project) {
     try {
@@ -42,7 +42,7 @@ const main = async () => {
 process.on('SIGTERM', () => {
   // Clean up resources on shutdown
   logger.info('Caught SIGTERM.');
-  logger.flush();
+  (logger as any).flush?.();
 });
 
 main();

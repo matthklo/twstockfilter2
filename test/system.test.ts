@@ -12,13 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-'use strict';
-
 import assert from 'assert';
-import got from 'got';
+import got, { OptionsInit } from 'got';
 
 describe('System Tests', () => {
-  const {BASE_URL, ID_TOKEN} = process.env;
+  const { BASE_URL, ID_TOKEN } = process.env;
 
   before(async () => {
     if (!BASE_URL) throw Error('Cloud Run service URL not found');
@@ -26,7 +24,7 @@ describe('System Tests', () => {
   });
 
   it('can successfully make a request', async () => {
-    const options = {
+    const options: OptionsInit = {
       headers: {
         Authorization: `Bearer ${ID_TOKEN}`,
       },
@@ -36,7 +34,7 @@ describe('System Tests', () => {
         limit: 6,
       },
     };
-    const response = await got(BASE_URL, options);
+    const response: any = await got(BASE_URL!, options);
     assert.strictEqual(response.statusCode, 200);
     assert.strictEqual(response.body, 'Hello World!');
   });

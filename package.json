@@ -2,20 +2,22 @@
   "name": "cloud-run-microservice-template",
   "version": "1.0.0",
   "description": "Microservice template for Cloud Run",
-  "main": "index.js",
+  "main": "dist/index.js",
   "type": "module",
   "engines": {
     "node": ">=16"
   },
   "scripts": {
-    "start": "node index.js",
-    "dev": "NODE_ENV=development nodemon index.js | pino-pretty",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc && NODE_ENV=development nodemon -e ts --watch utils --watch test --watch . --exec \"tsc && node\" dist/index.js | pino-pretty",
     "lint": "eslint",
     "fix": "eslint --fix",
-    "build-image": "gcloud builds submit --pack image=us-central1-docker.pkg.dev/$GOOGLE_CLOUD_PROJECT/samples/microservice-template:manual",
-    "deploy": "gcloud run deploy microservice-template --image us-central1-docker.pkg.dev/$GOOGLE_CLOUD_PROJECT/samples/microservice-template:manual --region us-central1",
-    "test": "mocha test/app.test.js --check-leaks",
-    "system-test": "mocha test/system.test.js --timeout=180000"
+    "docker-image": "docker build -t twstockfilter2:latest .",
+    "build-image": "gcloud builds submit --pack image=asia-east1-docker.pkg.dev/$GOOGLE_CLOUD_PROJECT/builds/twstockfilter2:manual",
+    "deploy": "gcloud run deploy twstockfilter2 --image asia-east1-docker.pkg.dev/$GOOGLE_CLOUD_PROJECT/builds/twstockfilter2:manual --region asia-east1",
+    "test": "npm run build && mocha dist/test/app.test.js --check-leaks",
+    "system-test": "npm run build && mocha dist/test/system.test.js --timeout=180000"
   },
   "author": "Google LLC",
   "license": "Apache-2.0",
@@ -27,11 +29,16 @@
     "pino-http": "^11.0.0"
   },
   "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^25.9.3",
+    "@types/supertest": "^7.2.0",
     "eslint": "^9.0.0",
     "eslint-config-google": "^0.14.0",
     "got": "^14.0.0",
     "mocha": "^11.0.0",
     "nodemon": "^3.0.0",
-    "supertest": "^7.0.0"
+    "supertest": "^7.0.0",
+    "typescript": "^6.0.3"
   }
 }

@@ -13,14 +13,15 @@
 // limitations under the License.
 
 import gcpMetadata from 'gcp-metadata';
-import {GoogleAuth} from 'google-auth-library';
+import { GoogleAuth } from 'google-auth-library';
+
 const auth = new GoogleAuth();
 
 /**
  * Fetch GCP Project Id
- * @return {string} Project Id
+ * @return {Promise<string>} Project Id
  */
-export async function fetchProjectId() {
+export async function fetchProjectId(): Promise<string> {
   // Use the 'google-auth-library' to make a request to the metadata server or
   // default to Application Default Credentials in your local environment.
   return await auth.getProjectId();
@@ -28,11 +29,11 @@ export async function fetchProjectId() {
 
 /**
  * Fetch service region
- * @return {string | undefined} Region in format: projects/PROJECT_NUMBER/regions/REGION
+ * @return {Promise<string | undefined>} Region in format: projects/PROJECT_NUMBER/regions/REGION
  */
-export async function fetchServiceRegion() {
-  let region = undefined;
-  if (gcpMetadata.isAvailable()) {
+export async function fetchServiceRegion(): Promise<string | undefined> {
+  let region: string | undefined = undefined;
+  if (await gcpMetadata.isAvailable()) {
     region = await gcpMetadata.instance('region');
   }
   return region;
@@ -43,10 +44,10 @@ export async function fetchServiceRegion() {
  * https://github.com/googleapis/google-auth-library-nodejs#working-with-id-tokens
  * @param {string} url - receiving service URL
  * @param {string} method - request method
- * @return {GaxiosPromise<AxiosResponse>} request response
+ * @return {Promise<any>} request response
  */
-export async function authenticatedRequest(url, method) {
+export async function authenticatedRequest(url: string, method: string): Promise<any> {
   const client = await auth.getIdTokenClient(url);
-  const response = await client.request({url, method});
+  const response = await client.request({ url, method });
   return response;
 }
