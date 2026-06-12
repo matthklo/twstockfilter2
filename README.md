@@ -1,6 +1,8 @@
 # twstockfilter2 Microservice
 
-A repository for twstockfilter2 microservice, written in TypeScript+Node.js. Powered by Google Cloud Run.
+A repository for twstockfilter2 microservice, written in TypeScript+Node.js.
+
+Powered by Google Cloud Run.
 
 ## Prerequisite
 
