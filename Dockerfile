@@ -1,3 +1,6 @@
+# syntax=docker/dockerfile:1
+# ^ pull the latest stable version of the Dockerfile syntax before the build
+
 # Copyright 2021 Google LLC
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
