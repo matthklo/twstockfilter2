@@ -27,3 +27,8 @@ npm-debug.log
 
 # Build output
 dist/
+
+# Exclude credentials
+credentials/
+.env
+.env.*

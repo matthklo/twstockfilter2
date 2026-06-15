@@ -21,17 +21,22 @@
   "author": "Google LLC",
   "license": "Apache-2.0",
   "dependencies": {
+    "dotenv": "^17.4.2",
     "express": "^5.0.0",
     "gcp-metadata": "^8.0.0",
     "google-auth-library": "^10.0.0",
     "pino": "^10.0.0",
-    "pino-http": "^11.0.0"
+    "pino-http": "^11.0.0",
+    "swagger-jsdoc": "^6.3.0",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
     "@types/mocha": "^10.0.10",
     "@types/node": "^25.9.3",
     "@types/supertest": "^7.2.0",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.8",
     "eslint": "^9.0.0",
     "eslint-config-google": "^0.14.0",
     "got": "^14.0.0",

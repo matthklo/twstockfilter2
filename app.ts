@@ -12,13 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import 'dotenv/config'
 import express, { Request, Response } from 'express';
 import { pinoHttp, logger } from './utils/logging.js';
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from './swaggerconfig.js'
 
 const app = express();
 
+// Always trust proxy because it will be deployed using Google Cloud Run
+app.set('trust proxy', true);
+
 // Use request-based logger for log correlation
 app.use(pinoHttp);
+
+// Decide whether to enable Swagger /api-docs endpoint
+if (process.env.SWAGGER !== '' && !!process.env.SWAGGER) {
+  console.log('Swagger /api-docs endpoint enabled.');
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+}
 
 // Example endpoint
 app.get('/', async (req: Request, res: Response) => {
