@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import app from './app.js';
+import appCtx from './app.js';
 import { logger, initLogCorrelation } from './utils/logging.js';
 import { fetchProjectId } from './utils/metadata.js';
 
@@ -33,7 +33,7 @@ const main = async (): Promise<void> => {
 
   // Start server listening on PORT env var
   const PORT = process.env.PORT || 8080;
-  app.listen(PORT, () => logger.info(`Listening on port ${PORT}`));
+  appCtx.expressApp!.listen(PORT, () => logger.info(`Listening on port ${PORT}`));
 };
 
 /**

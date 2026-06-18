@@ -19,7 +19,7 @@ let request: any;
 
 describe('Unit Tests', () => {
   before(async () => {
-    request = supertest(app);
+    request = supertest(app.expressApp!);
   });
 
   it('should respond OK to GET /', async () => {

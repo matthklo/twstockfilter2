@@ -11,7 +11,7 @@
     "build": "tsc",
     "build-prod": "tsc -p tsconfig.prod.json",
     "start": "node dist/index.js",
-    "dev": "tsc && NODE_ENV=development nodemon -e ts --watch utils --watch test --watch . --exec \"tsc && node\" dist/index.js | pino-pretty",
+    "dev": "tsc && NODE_ENV=development nodemon -e ts --watch utils --watch api --watch . --exec \"tsc && node\" dist/index.js | pino-pretty",
     "lint": "eslint",
     "fix": "eslint --fix",
     "build-image": "docker build -t twstockfilter2:latest .",
@@ -23,6 +23,7 @@
   "dependencies": {
     "dotenv": "^17.4.2",
     "express": "^5.0.0",
+    "firebase-admin": "^14.0.0",
     "gcp-metadata": "^8.0.0",
     "google-auth-library": "^10.0.0",
     "pino": "^10.0.0",
