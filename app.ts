@@ -13,46 +13,38 @@
 // limitations under the License.
 
 import 'dotenv/config'
-import { AppContext } from './utils/shared_types.js';
+import './utils/firebase.js'
 import express from 'express';
+import cors from 'cors';
 import { pinoHttp } from './utils/logging.js';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './swaggerconfig.js'
-import { initializeApp, applicationDefault } from 'firebase-admin/app';
-import { getFirestore } from 'firebase-admin/firestore';
-import { getAuth } from 'firebase-admin/auth';
 
-import { useTestApi } from './api/test.js'
+import idRouter from './api/id.js';
+import testRouter from './api/test.js';
 
-let appCtx : AppContext = new AppContext();
-
-const expressApp = express();
-appCtx.expressApp = expressApp;
+const app = express();
 
 // Always trust proxy because it will be deployed using Google Cloud Run
-expressApp.set('trust proxy', true);
+app.set('trust proxy', true);
 
 // Use request-based logger for log correlation
-expressApp.use(pinoHttp);
+app.use(pinoHttp);
+
+// CORS: Adds headers: Access-Control-Allow-Origin: *
+app.use(cors());
 
 // Use body-parsing middlewares
-expressApp.use(express.json()); // for parsing application/json
-expressApp.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+app.use(express.json()); // for parsing application/json
+app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
 // Decide whether to enable Swagger /api-docs endpoint
 if (process.env.SWAGGER !== '' && !!process.env.SWAGGER) {
   console.log('Swagger /api-docs endpoint enabled.');
-  expressApp.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 }
 
-// Initialize Firebase SDK, either with a service account key (local dev, 
-// when the GOOGLE_APPLICATION_CREDENTIALS environment variable is set) 
-// or ADC (Cloud Run, https://docs.cloud.google.com/docs/authentication#adc)
-appCtx.firebaseApp = initializeApp({credential: applicationDefault()});
-appCtx.db = getFirestore();
-appCtx.auth = getAuth();
+app.use('/id', idRouter);
+app.use('/test', testRouter);
 
-// Register all APIs
-useTestApi(appCtx);
-
-export default appCtx;
+export default app;
